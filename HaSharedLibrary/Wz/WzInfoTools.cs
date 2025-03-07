@@ -135,12 +135,11 @@ namespace HaSharedLibrary.Wz
             return null;
         }
 
-        public static WzCanvasProperty GetReactorImage(WzImage parentImage)
+        public static WzCanvasProperty GetReactorImage(WzSubProperty obj)
         {
-            WzSubProperty action0 = (WzSubProperty)parentImage["0"];
-            if (action0 != null)
+            if (obj != null)
             {
-                WzCanvasProperty frame1 = (WzCanvasProperty)GetRealProperty(action0["0"]);
+                WzCanvasProperty frame1 = (WzCanvasProperty)GetRealProperty(obj["0"]);
                 if (frame1 != null) return frame1;
             }
             return null;

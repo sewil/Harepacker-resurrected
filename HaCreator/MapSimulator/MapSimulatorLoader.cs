@@ -334,7 +334,7 @@ namespace HaCreator.MapSimulator {
 
             List<IDXObject> frames = new List<IDXObject>();
 
-            WzImage linkedReactorImage = reactorInfo.LinkedWzImage;
+            var linkedReactorImage = reactorInfo.LinkedWzObj;
             if (linkedReactorImage != null) {
                 WzImageProperty framesImage = (WzImageProperty)linkedReactorImage?["0"]?["0"];
                 if (framesImage != null) {

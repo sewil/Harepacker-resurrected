@@ -18,9 +18,11 @@ namespace HaCreator.MapEditor.Info
     public class ReactorInfo : MapleExtractableInfo
     {
         private readonly string id;
+        private readonly string cat;
+        private readonly string art;
         private readonly string _name;
 
-        private WzImage _LinkedWzImage;
+        private WzSubProperty _LinkedWzObj;
 
         /// <summary>
         /// Constructor
@@ -30,16 +32,18 @@ namespace HaCreator.MapEditor.Info
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="parentObject"></param>
-        public ReactorInfo(Bitmap image, System.Drawing.Point origin, string id, string name, WzObject parentObject)
+        public ReactorInfo(Bitmap image, System.Drawing.Point origin, string id, string name, WzObject parentObject, string cat, string art)
             : base(image, origin, parentObject)
         {
             this.id = id;
             this._name = name;
+            this.cat = cat;
+            this.art = art;
         }
 
-        private void ExtractPNGFromImage(WzImage image)
+        private void ExtractPNGFromImage(WzSubProperty obj)
         {
-            WzCanvasProperty reactorImage = WzInfoTools.GetReactorImage(image);
+            WzCanvasProperty reactorImage = WzInfoTools.GetReactorImage(obj);
             if (reactorImage != null)
             {
                 Image = reactorImage.GetLinkedWzCanvasBitmap();
@@ -54,10 +58,7 @@ namespace HaCreator.MapEditor.Info
 
         public override void ParseImage()
         {
-            if (LinkedWzImage != null) // load from here too
-                ExtractPNGFromImage(_LinkedWzImage);
-            else
-                ExtractPNGFromImage((WzImage)ParentObject);
+            ExtractPNGFromImage(LinkedWzObj);
         }
 
         public static ReactorInfo Get(string id)
@@ -96,26 +97,16 @@ namespace HaCreator.MapEditor.Info
         /// <summary>
         /// The source WzImage of the reactor
         /// </summary>
-        public WzImage LinkedWzImage
+        public WzSubProperty LinkedWzObj
         {
             get {
-                if (_LinkedWzImage == null) {
-                    string imgName = WzInfoTools.AddLeadingZeros(id, 7) + ".img";
-                    WzObject reactorObject = Program.WzManager.FindWzImageByName("reactor", imgName);
-
-                    WzStringProperty link = (WzStringProperty)reactorObject?["info"]?["link"];
-                    if (link != null) {
-                        string linkImgName = WzInfoTools.AddLeadingZeros(link.Value, 7) + ".img";
-                        WzImage findLinkedImg = (WzImage)Program.WzManager.FindWzImageByName("reactor", linkImgName);
-
-                        _LinkedWzImage = findLinkedImg ?? (WzImage) reactorObject; // fallback if link is null
-                    }
-                    else
-                        _LinkedWzImage = (WzImage)reactorObject;
+                if (_LinkedWzObj == null) {
+                    var obj = Program.WzManager.FindWzImageByName("map", "Obj");
+                    _LinkedWzObj = (WzSubProperty)WzInfoTools.GetObjectByRelativePath(obj, $"Reactor.img/{cat}/{art}/{id}");
                 }
-                return _LinkedWzImage;
+                return _LinkedWzObj;
             }
-            set { this._LinkedWzImage = value; }
+            set { this._LinkedWzObj = value; }
         }
     }
 }

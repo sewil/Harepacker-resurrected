@@ -602,25 +602,30 @@ namespace HaCreator.GUI
             if (Program.InfoManager.Reactors.Count != 0)
                 return;
 
-            List<WzDirectory> reactorWzDirs = Program.WzManager.GetWzDirectoriesFromBase("reactor");
-            foreach (WzDirectory reactorWzDir in reactorWzDirs)
+            var reactorImg = (WzImage)Program.WzManager.GetWzDirectoriesFromBase("reactor")[0]["Reactor.img"];
+            foreach (var catProp in reactorImg.WzProperties)
             {
-                foreach (WzImage reactorImage in reactorWzDir.WzImages)
+                foreach (var artProp in catProp.WzProperties)
                 {
-                    WzSubProperty infoProp =  (WzSubProperty)reactorImage["info"];
-
-                    string reactorId = WzInfoTools.RemoveExtension(reactorImage.Name); // without ".img"
-                    string name = "NO NAME";
-                    if (infoProp != null)
+                    foreach (var reactorImage in artProp.WzProperties)
                     {
-                        name = ((WzStringProperty)infoProp?["info"])?.Value ?? null;
-                        if (name == null)
-                            name = ((WzStringProperty)infoProp?["viewName"])?.Value ?? string.Empty;
+                        WzSubProperty infoProp =  (WzSubProperty)reactorImage["info"];
+                        string cat = catProp.Name;
+                        string art = artProp.Name;
+
+                        string reactorId = reactorImage.Name;
+                        string name = "NO NAME";
+                        if (infoProp != null)
+                        {
+                            name = ((WzStringProperty)infoProp?["info"])?.Value ?? null;
+                            if (name == null)
+                                name = ((WzStringProperty)infoProp?["viewName"])?.Value ?? string.Empty;
+                        }
+
+                        ReactorInfo reactor = new ReactorInfo(null, new System.Drawing.Point(), reactorId, name, reactorImage, cat, art);
+
+                        Program.InfoManager.Reactors[reactor.ID] = reactor;
                     }
-
-                    ReactorInfo reactor = new ReactorInfo(null, new System.Drawing.Point(), reactorId, name, reactorImage);
-
-                    Program.InfoManager.Reactors[reactor.ID] = reactor;
                 }
             }
         }
@@ -1147,7 +1152,7 @@ namespace HaCreator.GUI
 
             WzPropertyCollection stringCashImg;
             if (bIsBetaMapleStory)
-                stringCashImg = ((WzSubProperty)Program.WzManager.FindWzImageByName("string", "Item.img")["Cash"]).WzProperties;
+                stringCashImg = ((WzSubProperty)Program.WzManager.FindWzImageByName("string", "Item.img")["Pet"]).WzProperties;
             else
                 stringCashImg = ((WzImage)Program.WzManager.FindWzImageByName("string", "Cash.img")).WzProperties;
 
