@@ -57,6 +57,7 @@ namespace HaRepacker.GUI
             this.wzLongPropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wzDoublePropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wzCompressedIntPropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.wzShortPropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wzUnsignedShortPropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.wzConvexPropertyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -227,6 +228,7 @@ namespace HaRepacker.GUI
             this.wzLongPropertyToolStripMenuItem,
             this.wzDoublePropertyToolStripMenuItem,
             this.wzCompressedIntPropertyToolStripMenuItem,
+            this.wzShortPropertyToolStripMenuItem,
             this.wzUnsignedShortPropertyToolStripMenuItem,
             this.toolStripSeparator3,
             this.wzConvexPropertyToolStripMenuItem,
@@ -306,6 +308,12 @@ namespace HaRepacker.GUI
             this.wzCompressedIntPropertyToolStripMenuItem.Name = "wzCompressedIntPropertyToolStripMenuItem";
             resources.ApplyResources(this.wzCompressedIntPropertyToolStripMenuItem, "wzCompressedIntPropertyToolStripMenuItem");
             this.wzCompressedIntPropertyToolStripMenuItem.Click += new System.EventHandler(this.WzCompressedIntPropertyToolStripMenuItem_Click);
+            // 
+            // wzShortPropertyToolStripMenuItem
+            // 
+            this.wzShortPropertyToolStripMenuItem.Name = "wzShortPropertyToolStripMenuItem";
+            resources.ApplyResources(this.wzShortPropertyToolStripMenuItem, "wzShortPropertyToolStripMenuItem");
+            this.wzShortPropertyToolStripMenuItem.Click += new System.EventHandler(this.WzShortPropertyToolStripMenuItem_Click);
             // 
             // wzUnsignedShortPropertyToolStripMenuItem
             // 
@@ -691,6 +699,7 @@ namespace HaRepacker.GUI
         private System.Windows.Forms.ToolStripMenuItem wzSoundPropertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wzStringPropertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wzSubPropertyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem wzShortPropertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wzUnsignedShortPropertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wzUolPropertyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem wzVectorPropertyToolStripMenuItem;

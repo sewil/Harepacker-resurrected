@@ -220,6 +220,12 @@
   <data name="wzSubPropertyToolStripMenuItem.Text" xml:space="preserve">
     <value>子目錄(WzSubProperty)</value>
   </data>
+  <data name="wzShortPropertyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>293, 22</value>
+  </data>
+  <data name="wzShortPropertyToolStripMenuItem.Text" xml:space="preserve">
+    <value>短整數(WzShortProperty)</value>
+  </data>
   <data name="wzUnsignedShortPropertyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>293, 22</value>
   </data>

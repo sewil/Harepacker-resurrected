@@ -373,11 +373,17 @@
   <data name="wzCompressedIntPropertyToolStripMenuItem.Text" xml:space="preserve">
     <value>Int</value>
   </data>
+  <data name="wzShortPropertyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 22</value>
+  </data>
+  <data name="wzShortPropertyToolStripMenuItem.Text" xml:space="preserve">
+    <value>Short</value>
+  </data>
   <data name="wzUnsignedShortPropertyToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 22</value>
   </data>
   <data name="wzUnsignedShortPropertyToolStripMenuItem.Text" xml:space="preserve">
-    <value>Short</value>
+    <value>UShort</value>
   </data>
   <data name="toolStripSeparator3.Size" type="System.Drawing.Size, System.Drawing">
     <value>162, 6</value>
@@ -2586,6 +2592,12 @@
     <value>wzCompressedIntPropertyToolStripMenuItem</value>
   </data>
   <data name="&gt;&gt;wzCompressedIntPropertyToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;wzShortPropertyToolStripMenuItem.Name" xml:space="preserve">
+    <value>wzShortPropertyToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;wzShortPropertyToolStripMenuItem.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;wzUnsignedShortPropertyToolStripMenuItem.Name" xml:space="preserve">

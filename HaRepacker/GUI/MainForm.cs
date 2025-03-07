@@ -2062,6 +2062,16 @@ namespace HaRepacker.GUI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        private void WzShortPropertyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainPanel.AddWzShortPropertyToSelectedIndex(MainPanel.DataTree.SelectedNode);
+        }
+
+        /// <summary>
+        /// Add WzUShortProperty
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WzUnsignedShortPropertyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MainPanel.AddWzUnsignedShortPropertyToSelectedIndex(MainPanel.DataTree.SelectedNode);

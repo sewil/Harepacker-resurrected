@@ -46,7 +46,8 @@ namespace HaRepacker
         private ToolStripMenuItem AddSound;
         private ToolStripMenuItem AddString;
         private ToolStripMenuItem AddSub;
-        private ToolStripMenuItem AddUshort;
+        private ToolStripMenuItem AddShort;
+        private ToolStripMenuItem AddUShort;
         private ToolStripMenuItem AddUOL;
         private ToolStripMenuItem AddVector;
         private ToolStripMenuItem Rename;
@@ -300,7 +301,20 @@ namespace HaRepacker
 
                     haRepackerMainPanel.AddWzSubPropertyToSelectedIndex(nodes[0]);
                 }));
-            AddUshort = new ToolStripMenuItem("Short", null, new EventHandler(
+            AddShort = new ToolStripMenuItem("Short", null, new EventHandler(
+                delegate (object sender, EventArgs e)
+                {
+                    WzNode[] nodes = GetNodes(sender);
+                    if (nodes.Length != 1)
+                    {
+                        MessageBox.Show("Please select only ONE node");
+                        return;
+                    }
+
+                    haRepackerMainPanel.AddWzShortPropertyToSelectedIndex(nodes[0]);
+
+                }));
+            AddUShort = new ToolStripMenuItem("UShort", null, new EventHandler(
                 delegate (object sender, EventArgs e)
                 {
                     WzNode[] nodes = GetNodes(sender);
@@ -379,7 +393,7 @@ namespace HaRepacker
                 AddDirectory, AddImage);
 
             AddPropsSubMenu = new ToolStripMenuItem("Add", Properties.Resources.add, 
-                AddCanvas, AddConvex, AddDouble, AddByteFloat, AddLong, AddInt, AddNull, AddUshort, AddSound, AddString, AddSub, AddUOL, AddVector);
+                AddCanvas, AddConvex, AddDouble, AddByteFloat, AddLong, AddInt, AddNull, AddShort, AddUShort, AddSound, AddString, AddSub, AddUOL, AddVector);
 
             AddBatchMenu = new ToolStripMenuItem(Properties.Resources.MainContextMenu_Batch, Properties.Resources.batch_edit, 
                 FixInlink, AiUpscaleImage);

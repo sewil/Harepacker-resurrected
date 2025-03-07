@@ -468,6 +468,27 @@ namespace HaRepacker.GUI.Panels
         }
 
         /// <summary>
+        /// WzShortProperty
+        /// </summary>
+        /// <param name="target"></param>
+        public void AddWzShortPropertyToSelectedIndex(System.Windows.Forms.TreeNode target)
+        {
+            string name;
+            int? value;
+            if (!(target.Tag is IPropertyContainer))
+            {
+                Warning.Error(Properties.Resources.MainCannotInsertToNode);
+                return;
+            }
+            else if (!IntInputBox.Show(Properties.Resources.MainAddShort,
+                "", 0,
+                out name, out value))
+                return;
+            ((WzNode)target).AddObject(new WzShortProperty(name, (short)value), UndoRedoMan);
+        }
+
+
+        /// <summary>
         /// WzUnsignedShortProperty
         /// </summary>
         /// <param name="target"></param>
@@ -484,7 +505,7 @@ namespace HaRepacker.GUI.Panels
                 "", 0,
                 out name, out value))
                 return;
-            ((WzNode)target).AddObject(new WzShortProperty(name, (short)value), UndoRedoMan);
+            ((WzNode)target).AddObject(new WzUShortProperty(name, (ushort)value), UndoRedoMan);
         }
 
         /// <summary>
@@ -1637,6 +1658,7 @@ namespace HaRepacker.GUI.Panels
                 bool bIsWzDoubleProperty = obj is WzDoubleProperty;
                 bool bIsWzFloatProperty = obj is WzFloatProperty;
                 bool bIsWzShortProperty = obj is WzShortProperty;
+                bool bIsWzUShortProperty = obj is WzUShortProperty;
                 bool bIsWzNullProperty = obj is WzNullProperty;
                 bool bIsWzSubProperty = obj is WzSubProperty;
                 bool bIsWzConvexProperty = obj is WzConvexProperty;
@@ -1731,7 +1753,7 @@ namespace HaRepacker.GUI.Panels
 
                     textEditor.textEditor.Text = obj.ToString();
                 }
-                else if (bIsWzStringProperty || bIsWzIntProperty || bIsWzLongProperty || bIsWzDoubleProperty || bIsWzFloatProperty || bIsWzShortProperty) {
+                else if (bIsWzStringProperty || bIsWzIntProperty || bIsWzLongProperty || bIsWzDoubleProperty || bIsWzFloatProperty || bIsWzShortProperty || bIsWzUShortProperty) {
                     // If text is a string property, expand the textbox
                     if (bIsWzStringProperty) {
                         WzStringProperty stringObj = (WzStringProperty)obj;
@@ -1790,7 +1812,7 @@ namespace HaRepacker.GUI.Panels
                             }
                         }
                     }
-                    else if (bIsWzLongProperty || bIsWzIntProperty || bIsWzShortProperty) {
+                    else if (bIsWzLongProperty || bIsWzIntProperty || bIsWzShortProperty || bIsWzUShortProperty) {
                         // field limit UI
                         if (obj.Name == FIELD_LIMIT_OBJ_NAME) // fieldLimit
                         {
@@ -1806,6 +1828,9 @@ namespace HaRepacker.GUI.Panels
                             }
                             else if (bIsWzShortProperty) {
                                 value_ = (ulong)((WzShortProperty)obj).GetLong();
+                            }
+                            else if (bIsWzUShortProperty) {
+                                value_ = (ulong)((WzUShortProperty)obj).GetLong();
                             }
 
                             fieldLimitPanel1.UpdateFieldLimitCheckboxes(value_);
@@ -1826,6 +1851,9 @@ namespace HaRepacker.GUI.Panels
                             }
                             else if (bIsWzShortProperty) {
                                 value_ = ((WzShortProperty)obj).GetLong();
+                            }
+                            else if (bIsWzUShortProperty) {
+                                value_ = ((WzUShortProperty)obj).GetLong();
                             }
                             _bindingPropertyItem.WzFileValue = value_.ToString();
                             _bindingPropertyItem.ChangeReadOnlyAttribute(false, _bindingPropertyItem, o => o.IsWzValueReadOnly, o => o.WzFileValue); // can be changed
