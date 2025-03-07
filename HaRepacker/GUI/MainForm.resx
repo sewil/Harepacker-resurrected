@@ -498,6 +498,9 @@
   <data name="imgToolStripMenuItem.Text" xml:space="preserve">
     <value>IMG</value>
   </data>
+<data name="imgToolStripMenuItem.Text" xml:space="preserve">
+    <value>IMG</value>
+  </data>
   <data name="nXFormatToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
     <value>172, 22</value>
   </data>
@@ -575,6 +578,12 @@
   </data>
   <data name="iMGToolStripMenuItem2.Text" xml:space="preserve">
     <value>IMG</value>
+  </data>
+    <data name="folderToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+        <value>98, 22</value>
+    </data>
+    <data name="folderToolStripMenuItem.Text" xml:space="preserve">
+    <value>Folder</value>
   </data>
   <data name="toolStripSeparator9.Size" type="System.Drawing.Size, System.Drawing">
     <value>165, 6</value>

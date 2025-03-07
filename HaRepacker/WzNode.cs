@@ -11,6 +11,9 @@ using MapleLib.WzLib.WzProperties;
 using System.Collections;
 using System.Drawing;
 using HaRepacker.Comparer;
+using System.Xml.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HaRepacker
 {
@@ -29,7 +32,7 @@ namespace HaRepacker
         /// </summary>
         /// <param name="SourceObject"></param>
         /// <param name="isWzObjectAddedManually"></param>
-        public WzNode(WzObject SourceObject, bool isWzObjectAddedManually = false)
+        public WzNode(WzObject SourceObject, bool isWzObjectAddedManually = false, bool parseChildren = true)
             : base(SourceObject.Name)
         {
             this.isWzObjectAddedManually = isWzObjectAddedManually;
@@ -37,14 +40,19 @@ namespace HaRepacker
             {
                 ForeColor = CHANGED_NODE_FOREGROUND_COLOR;
             }
+            
+            Tag = SourceObject ?? throw new NullReferenceException("Cannot create a null WzNode");
+            SourceObject.HRTag = this;
+
             // Childs
-            ParseChilds(SourceObject);
+            if (parseChildren)
+            {
+                ParseChilds(SourceObject);
+            }
         }
 
         private void ParseChilds(WzObject SourceObject)
         {
-            Tag = SourceObject ?? throw new NullReferenceException("Cannot create a null WzNode");
-            SourceObject.HRTag = this;
 
             if (SourceObject is WzFile) 
                 SourceObject = ((WzFile)SourceObject).WzDirectory;
@@ -185,6 +193,25 @@ namespace HaRepacker
                 MessageBox.Show("Cannot insert node \"" + node.Text + "\" because a node with the same name already exists. Skipping.", "Skipping Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
+        }
+
+        public void AddNodes(WzNode[] nodes, bool reparseImage)
+        {
+            TreeView.BeginUpdate();
+            foreach (var node in nodes)
+            {
+                if (CanNodeBeInserted(this, node.Text))
+                {
+                    this.Nodes.Add(node);
+                    TryParseImage(reparseImage);
+                    AddObjInternal((WzObject)node.Tag);
+                }
+                else
+                {
+                    MessageBox.Show("Cannot insert node \"" + node.Text + "\" because a node with the same name already exists. Skipping.", "Skipping Node", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            TreeView.EndUpdate();
         }
 
         /// <summary>

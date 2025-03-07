@@ -1850,6 +1850,41 @@ namespace HaRepacker.GUI
             new Thread(new ParameterizedThreadStart(ProgressBarThread)).Start(deserializer);
         }
 
+        private void folderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MainPanel.DataTree.SelectedNode == null || (!(MainPanel.DataTree.SelectedNode.Tag is WzDirectory) && !(MainPanel.DataTree.SelectedNode.Tag is WzFile) && !(MainPanel.DataTree.SelectedNode.Tag is IPropertyContainer)))
+                return;
+
+            WzFile wzFile = ((WzObject)MainPanel.DataTree.SelectedNode.Tag).WzFileParent;
+            if (!(wzFile is WzFile))
+                return;
+
+            var dialog = new Microsoft.Win32.OpenFolderDialog()
+            {
+                Title = "Select directory",
+                Multiselect = true
+            };
+            if (dialog.ShowDialog() != true)
+                return;
+
+            WzMapleVersion wzImageImportVersion = WzMapleVersion.BMS;
+            bool input = WzMapleVersionInputBox.Show(HaRepacker.Properties.Resources.InteractionWzMapleVersionTitle, out wzImageImportVersion);
+            if (!input)
+                return;
+
+            WzImgDeserializer deserializer = new WzImgDeserializer(true);
+            yesToAll = false;
+            noToAll = false;
+            threadDone = false;
+
+            runningThread = new Thread(new ParameterizedThreadStart(WzFolderImporterThread));
+            runningThread.Start(
+                new object[]
+                {
+                    deserializer, dialog.FolderNames, MainPanel.DataTree.SelectedNode, wzFile
+                });
+            new Thread(new ParameterizedThreadStart(ProgressBarThread)).Start(deserializer);
+        }
         private void searchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //MainPanel.findStrip.Visible = true;
@@ -2117,6 +2152,103 @@ namespace HaRepacker.GUI
             throw new Exception("cant get here anyway");
         }
 
+        private Task ImportFolder(ProgressingWzSerializer deserializer, WzFile wzFile, WzNode parent, string folder)
+        {
+            string dirName = new DirectoryInfo(folder).Name;
+            var obj = new WzDirectory(dirName, wzFile);
+            var subparent = new WzNode(obj, true);
+            InsertWzNodeThreadSafe(subparent, parent);
+            var subfolders = Directory.GetDirectories(folder);
+            UpdateProgressBar(MainPanel.mainProgressBar, subfolders.Length, true, false);
+
+            foreach (var subfolder in subfolders)
+            {
+                taskQueue.Enqueue(ImportFolder(deserializer, wzFile, subparent, subfolder));
+            }
+
+            var files = Directory.GetFiles(folder);
+            ChangeApplicationState(false);
+
+            WzObject parentObj = (WzObject)subparent.Tag;
+            if (parentObj is WzFile)
+                parentObj = ((WzFile)parentObj).WzDirectory;
+
+            return new TaskFactory().StartNew(() =>
+            {
+                UpdateProgressBar(MainPanel.secondaryProgressBar, files.Length, true, false);
+                var nodes = new List<WzNode>();
+                foreach (string file in files)
+                {
+                    UpdateProgressBar(MainPanel.secondaryProgressBar, 1, false, false);
+                    List<WzObject> objs;
+                    try
+                    {
+                        if (deserializer is WzXmlDeserializer)
+                            objs = ((WzXmlDeserializer)deserializer).ParseXML(file);
+                        else
+                        {
+                            bool successfullyParsedImage;
+                            objs = new List<WzObject>
+                            {
+                                ((WzImgDeserializer)deserializer).WzImageFromIMGFile(file, wzFile.WzIv, Path.GetFileName(file), out successfullyParsedImage)
+                            };
+
+                            if (!successfullyParsedImage)
+                            {
+                                MessageBox.Show(
+                                    string.Format(HaRepacker.Properties.Resources.MainErrorImportingWzImageFile, file),
+                                    HaRepacker.Properties.Resources.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                continue;
+                            }
+                        }
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        return;
+                    }
+                    catch (Exception e)
+                    {
+                        Warning.Error(string.Format(HaRepacker.Properties.Resources.MainInvalidFileError, file, e.Message));
+                        continue;
+                    }
+                    foreach (WzObject obj in objs)
+                    {
+                        if (((obj is WzDirectory || obj is WzImage) && parentObj is WzDirectory) || (obj is WzImageProperty && parentObj is IPropertyContainer))
+                        {
+                            WzNode node = new WzNode(obj, true, false);
+                            nodes.Add(node);
+                        }
+                    }
+                }
+                MainPanel.Dispatcher.Invoke(() =>
+                {
+                    subparent.AddNodes(nodes.ToArray(), true);
+                });
+                UpdateProgressBar(MainPanel.mainProgressBar, 1, false, false);
+            });
+        }
+        Queue<Task> taskQueue = new Queue<Task>();
+        private void WzFolderImporterThread(object param)
+        {
+            ChangeApplicationState(false);
+
+            object[] arr = (object[])param;
+            ProgressingWzSerializer deserializer = (ProgressingWzSerializer)arr[0];
+            string[] folders = (string[])arr[1];
+            WzNode parent = (WzNode)arr[2];
+            WzFile wzFile = (WzFile)arr[3];
+
+            UpdateProgressBar(MainPanel.mainProgressBar, 0, true, true);
+            UpdateProgressBar(MainPanel.secondaryProgressBar, 0, true, true);
+            foreach (var folder in folders)
+            {
+                taskQueue.Enqueue(ImportFolder(deserializer, wzFile, parent, folder));
+            }
+            Task.WhenAll(taskQueue).Wait();
+            taskQueue.Clear();
+            MapleLib.Helpers.ErrorLogger.SaveToFile("WzImport_Errors.txt");
+            threadDone = true;
+        }
         private void WzImporterThread(object param)
         {
             ChangeApplicationState(false);
