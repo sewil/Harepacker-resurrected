@@ -22,6 +22,8 @@ namespace HaRepacker.GUI
         /// </summary>
         private WzMapleVersion WzMapleVersion = WzMapleVersion.BMS;
 
+        private string WzGameVersion = null;
+
         /// <summary>
         /// List of WZ Directories
         /// </summary>
@@ -41,9 +43,10 @@ namespace HaRepacker.GUI
 
         private Dictionary<int, KeyValuePair<string, string>> NPCsCache; // <NPCId, <Name, func>>
 
-        public WzStringSearchFormDataCache(WzMapleVersion wzMapleVersion)
+        public WzStringSearchFormDataCache(WzMapleVersion wzMapleVersion, string wzGameVersion)
         {
             this.WzMapleVersion = wzMapleVersion;
+            this.WzGameVersion = wzGameVersion;
 
             Files = new Dictionary<string, WzFile>();
 
@@ -318,7 +321,7 @@ namespace HaRepacker.GUI
                         FileInfo Info = new FileInfo(Name);
                         if (Info.Extension != ".wz")
                             continue;
-                        WzFile File = new WzFile(Name, WzMapleVersion);
+                        WzFile File = new WzFile(Name, WzGameVersion, WzMapleVersion);
 
 
                         WzFileParseStatus parseStatus = File.ParseWzFile();

@@ -33,6 +33,7 @@ namespace HaCreator.GUI
         
         
         private static WzMapleVersion _wzMapleVersion = WzMapleVersion.BMS; // Default to BMS, the enc version to use when decrypting the WZ files.
+        private static string _mapleGameVersion = null;
         public static WzMapleVersion WzMapleVersion
         {
             get { return _wzMapleVersion; }
@@ -71,7 +72,8 @@ namespace HaCreator.GUI
             _bIsInitialising = true;
 
             try {
-                ApplicationSettings.MapleVersionIndex = versionBox.SelectedIndex;
+                ApplicationSettings.MapleVersionIndex = wzEncryptionBox.SelectedIndex;
+                ApplicationSettings.MapleGameVersion = gameVersionBox.Text;
                 ApplicationSettings.MapleFolderIndex = pathBox.SelectedIndex;
                 ApplicationSettings.MapleStoryClientLocalisation = (int) comboBox_localisation.SelectedValue;
 
@@ -84,8 +86,9 @@ namespace HaCreator.GUI
                 if (!ApplicationSettings.MapleFoldersList.Contains(wzPath) && !IsPathCommon(wzPath)) {
                     ApplicationSettings.MapleFoldersList = ApplicationSettings.MapleFoldersList == "" ? wzPath : (ApplicationSettings.MapleFoldersList + "," + wzPath);
                 }
-                WzMapleVersion fileVersion = (WzMapleVersion)versionBox.SelectedIndex;
-                if (InitializeWzFiles(wzPath, fileVersion)) {
+                WzMapleVersion fileVersion = (WzMapleVersion)wzEncryptionBox.SelectedIndex;
+                string gameVersion = gameVersionBox.Text;
+                if (InitializeWzFiles(wzPath, fileVersion, gameVersion)) {
                     Hide();
                     Application.DoEvents();
                     editor = new HaEditor();
@@ -104,7 +107,7 @@ namespace HaCreator.GUI
         /// <param name="wzPath"></param>
         /// <param name="fileVersion"></param>
         /// <returns></returns>
-        private bool InitializeWzFiles(string wzPath, WzMapleVersion fileVersion)
+        private bool InitializeWzFiles(string wzPath, WzMapleVersion fileVersion, string gameVersion)
         {
             // Check if directory exist
             if (!Directory.Exists(wzPath))
@@ -124,6 +127,7 @@ namespace HaCreator.GUI
             }
 
             _wzMapleVersion = fileVersion; // set version to static vars
+            _mapleGameVersion = gameVersion;
 
             Program.WzManager = new WzFileManager(wzPath, false);
             Program.WzManager.BuildWzFileList(); // builds the list of WZ files in the directories (for HaCreator)
@@ -135,7 +139,7 @@ namespace HaCreator.GUI
 
                 try
                 {
-                    Program.WzManager.LoadLegacyDataWzFile("Data", _wzMapleVersion);
+                    Program.WzManager.LoadLegacyDataWzFile("Data", _wzMapleVersion, _mapleGameVersion);
                 }
                 catch (Exception e)
                 {
@@ -175,7 +179,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(stringWzFileName, true);
 
-                    Program.WzManager.LoadWzFile(stringWzFileName, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(stringWzFileName, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractStringFile(false);
 
@@ -185,7 +189,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(mobWZFile, true);
 
-                    Program.WzManager.LoadWzFile(mobWZFile, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(mobWZFile, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractMobFile();
 
@@ -196,7 +200,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(npc, true);
 
-                    Program.WzManager.LoadWzFile(npc, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(npc, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractNpcFile();
 
@@ -206,7 +210,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(reactor, true);
 
-                    Program.WzManager.LoadWzFile(reactor, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(reactor, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractReactorFile();
 
@@ -216,7 +220,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(soundDirName, true);
 
-                    Program.WzManager.LoadWzFile(soundDirName, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(soundDirName, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractSoundFile();
 
@@ -226,7 +230,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(questWzDir, true);
 
-                    Program.WzManager.LoadWzFile(questWzDir, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(questWzDir, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractQuestFile();
 
@@ -236,7 +240,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(characterWzDir, true);
 
-                    Program.WzManager.LoadWzFile(characterWzDir, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(characterWzDir, _wzMapleVersion, _mapleGameVersion);
                 }
                 //ExtractCharacterFile(); // due to performance issue, its loaded on demand
 
@@ -246,7 +250,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(skillWzDir, true);
 
-                    Program.WzManager.LoadWzFile(skillWzDir, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(skillWzDir, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractSkillFile();
 
@@ -256,7 +260,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(itemWzDir, true);
 
-                    Program.WzManager.LoadWzFile(itemWzDir, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(itemWzDir, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractItemFile();
 
@@ -266,7 +270,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(mapWzFileName, true);
 
-                    Program.WzManager.LoadWzFile(mapWzFileName, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(mapWzFileName, _wzMapleVersion, _mapleGameVersion);
                 }
                 for (int i_map = 0; i_map <= 9; i_map++)
                 {
@@ -275,7 +279,7 @@ namespace HaCreator.GUI
                     {
                         UpdateUI_CurrentLoadingWzFile(map_iWzFileName, true);
 
-                        Program.WzManager.LoadWzFile(map_iWzFileName, _wzMapleVersion);
+                        Program.WzManager.LoadWzFile(map_iWzFileName, _wzMapleVersion, _mapleGameVersion);
                     }
                 }
                 List<string> tileWzFiles = Program.WzManager.GetWzFileNameListFromBase("map\\tile"); // this doesnt exist before 64-bit client, and is kept in Map.wz
@@ -283,21 +287,21 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(tileWzFileNames, true);
 
-                    Program.WzManager.LoadWzFile(tileWzFileNames, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(tileWzFileNames, _wzMapleVersion, _mapleGameVersion);
                 }
                 List<string> objWzFiles = Program.WzManager.GetWzFileNameListFromBase("map\\obj"); // this doesnt exist before 64-bit client, and is kept in Map.wz
                 foreach (string objWzFileName in objWzFiles)
                 {
                     UpdateUI_CurrentLoadingWzFile(objWzFileName, true);
 
-                    Program.WzManager.LoadWzFile(objWzFileName, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(objWzFileName, _wzMapleVersion, _mapleGameVersion);
                 }
                 List<string> backWzFiles = Program.WzManager.GetWzFileNameListFromBase("map\\back"); // this doesnt exist before 64-bit client, and is kept in Map.wz
                 foreach (string backWzFileName in backWzFiles)
                 {
                     UpdateUI_CurrentLoadingWzFile(backWzFileName, true);
 
-                    Program.WzManager.LoadWzFile(backWzFileName, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(backWzFileName, _wzMapleVersion, _mapleGameVersion);
                 }
                 ExtractMapMarks();
                 ExtractMapPortals();
@@ -312,7 +316,7 @@ namespace HaCreator.GUI
                 {
                     UpdateUI_CurrentLoadingWzFile(uiWzFileNames, true);
 
-                    Program.WzManager.LoadWzFile(uiWzFileNames, _wzMapleVersion);
+                    Program.WzManager.LoadWzFile(uiWzFileNames, _wzMapleVersion, _mapleGameVersion);
                 }
             }
             return true;
@@ -320,7 +324,7 @@ namespace HaCreator.GUI
 
         private void UpdateUI_CurrentLoadingWzFile(string fileName, bool isWzFile)
         {
-            textBox2.Text = string.Format("Initializing {0}{1}...", fileName, isWzFile ? ".wz" : "");
+            statusTextBox.Text = string.Format("Initializing {0}{1}...", fileName, isWzFile ? ".wz" : "");
             Application.DoEvents();
         }
 
@@ -331,7 +335,8 @@ namespace HaCreator.GUI
         /// <param name="e"></param>
         private void Initialization_Load(object sender, EventArgs e)
         {
-            versionBox.SelectedIndex = 0;
+            wzEncryptionBox.SelectedIndex = 0;
+            gameVersionBox.Text = null;
             try
             {
                 string[] paths = ApplicationSettings.MapleFoldersList.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -355,7 +360,7 @@ namespace HaCreator.GUI
             catch
             {
             }
-            versionBox.SelectedIndex = ApplicationSettings.MapleVersionIndex;
+            wzEncryptionBox.SelectedIndex = ApplicationSettings.MapleVersionIndex;
             if (pathBox.Items.Count < ApplicationSettings.MapleFolderIndex + 1)
             {
                 pathBox.SelectedIndex = pathBox.Items.Count - 1;
@@ -364,6 +369,7 @@ namespace HaCreator.GUI
             {
                 pathBox.SelectedIndex = ApplicationSettings.MapleFolderIndex;
             }
+            gameVersionBox.Text = ApplicationSettings.MapleGameVersion;
 
             // Populate the MapleStory localisation box
             var values = Enum.GetValues(typeof(MapleLib.ClientLib.MapleStoryLocalisation))
@@ -383,7 +389,7 @@ namespace HaCreator.GUI
             comboBox_localisation.SelectedItem = savedLocaliation ?? values[0]; // KMS if null
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void browseButton_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog mapleSelect = new()
             {
@@ -413,8 +419,9 @@ namespace HaCreator.GUI
             // It is meant to use by the developer(s) to speed up the process of adjusting this program for different MapleStory versions
             string wzPath = pathBox.Text;
 
-            WzMapleVersion fileVersion = (WzMapleVersion)versionBox.SelectedIndex;
-            if (!InitializeWzFiles(wzPath, fileVersion))
+            WzMapleVersion fileVersion = (WzMapleVersion)wzEncryptionBox.SelectedIndex;
+            string gameVersion = gameVersionBox.Text;
+            if (!InitializeWzFiles(wzPath, fileVersion, gameVersion))
             {
                 return;
             }

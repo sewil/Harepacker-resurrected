@@ -104,6 +104,8 @@ namespace HaRepacker.GUI
             this.viewHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encryptionBox = new System.Windows.Forms.ToolStripComboBox();
+            this.gameVersionBox = new System.Windows.Forms.ToolStripTextBox();
+            this.gameVersionLabel = new System.Windows.Forms.ToolStripLabel();
             this.AbortButton = new System.Windows.Forms.Button();
             this.tabControl_MainPanels = new System.Windows.Forms.TabControl();
             this.button_addTab = new System.Windows.Forms.Button();
@@ -118,7 +120,10 @@ namespace HaRepacker.GUI
             this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem,
-            this.encryptionBox});
+            this.encryptionBox,
+            this.gameVersionLabel,
+            this.gameVersionBox,
+            });
             resources.ApplyResources(this.mainMenu, "mainMenu");
             this.mainMenu.Name = "mainMenu";
             // 
@@ -619,6 +624,17 @@ namespace HaRepacker.GUI
             resources.ApplyResources(this.encryptionBox, "encryptionBox");
             this.encryptionBox.Name = "encryptionBox";
             this.encryptionBox.SelectedIndexChanged += new System.EventHandler(this.EncryptionBox_SelectedIndexChanged);
+            //
+            // gameVersionLabel
+            //
+            this.gameVersionLabel.Name = "gameVersionLabel";
+            this.gameVersionLabel.Text = "Version:";
+            //
+            // gameVersionMenuItem
+            //
+            this.gameVersionBox.Name = "gameVersionMenuItem";
+            this.gameVersionBox.Width = 1600;
+            this.gameVersionBox.TextChanged += new System.EventHandler(this.GameVersionBox_TextChanged);
             // 
             // AbortButton
             // 
@@ -673,6 +689,8 @@ namespace HaRepacker.GUI
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportFilesToXMLToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox encryptionBox;
+        private System.Windows.Forms.ToolStripLabel gameVersionLabel;
+        private System.Windows.Forms.ToolStripTextBox gameVersionBox;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;

@@ -76,6 +76,7 @@ namespace HaCreator
     public static class ApplicationSettings
     {
         public static int MapleVersionIndex = 3;
+        public static string MapleGameVersion = null;
         public static string MapleFoldersList = ""; // list of maplestory folder seperated by ','
         public static int MapleFolderIndex = 0;
         public static int MapleStoryClientLocalisation = 1;

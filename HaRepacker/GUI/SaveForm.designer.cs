@@ -36,7 +36,7 @@ namespace HaRepacker.GUI
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox_64BitFile = new System.Windows.Forms.CheckBox();
-            this.versionBox = new HaRepacker.GUI.Input.IntegerInput();
+            this.versionBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // encryptionBox
@@ -75,7 +75,7 @@ namespace HaRepacker.GUI
             // 
             resources.ApplyResources(this.versionBox, "versionBox");
             this.versionBox.Name = "versionBox";
-            this.versionBox.Value = 0;
+            this.versionBox.Text = "0";
             // 
             // SaveForm
             // 
@@ -98,7 +98,7 @@ namespace HaRepacker.GUI
 
         private System.Windows.Forms.Button saveButton;
         public System.Windows.Forms.ComboBox encryptionBox;
-        private IntegerInput versionBox;
+        private System.Windows.Forms.TextBox versionBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox_64BitFile;

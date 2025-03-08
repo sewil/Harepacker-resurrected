@@ -45,7 +45,7 @@ namespace HaRepacker.GUI
             this.label6 = new System.Windows.Forms.Label();
             this.encryptionBox = new System.Windows.Forms.ComboBox();
             this.radioButton_hotfix = new System.Windows.Forms.RadioButton();
-            this.versionBox = new HaRepacker.GUI.Input.IntegerInput();
+            this.versionBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // nameBox
@@ -137,7 +137,7 @@ namespace HaRepacker.GUI
             // 
             resources.ApplyResources(this.versionBox, "versionBox");
             this.versionBox.Name = "versionBox";
-            this.versionBox.Value = 1;
+            this.versionBox.Text = "1";
             // 
             // NewForm
             // 
@@ -180,7 +180,7 @@ namespace HaRepacker.GUI
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox encryptionBox;
-        private IntegerInput versionBox;
+        private System.Windows.Forms.TextBox versionBox;
         private System.Windows.Forms.RadioButton radioButton_hotfix;
     }
 }

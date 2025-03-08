@@ -62,7 +62,7 @@ namespace HaRepacker.GUI
                 
                 SetWzEncryptionBoxSelectionByWzMapleVersion(wzf.MapleVersion);
 
-                versionBox.Value = wzf.Version;
+                versionBox.Text = wzf.Version;
                 versionBox.Enabled = wzf.Is64BitWzFile ? false : true; // disable checkbox if its checked as 64-bit, since the version will always be 777
                 checkBox_64BitFile.Checked = wzf.Is64BitWzFile;
             }
@@ -129,7 +129,7 @@ namespace HaRepacker.GUI
         /// <param name="e"></param>
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            if (versionBox.Value < 0)
+            if (string.IsNullOrWhiteSpace(versionBox.Text))
             {
                 Warning.Error(Properties.Resources.SaveVersionError);
                 return;
@@ -155,7 +155,7 @@ namespace HaRepacker.GUI
                     {
                         PrepareAllImgs(wzf.WzDirectory);
                     }
-                    wzf.Version = (short)versionBox.Value;
+                    wzf.Version = versionBox.Text;
                     wzf.MapleVersion = wzMapleVersionSelected;
 
                     if (string.Equals(wzf.FilePath, dialog.FileName, StringComparison.OrdinalIgnoreCase))
@@ -180,7 +180,7 @@ namespace HaRepacker.GUI
 
                     // Reload the new file
                     var loadedFiles = Program.WzFileManager.WzFileList;
-                    WzFile loadedWzFile = Program.WzFileManager.LoadWzFile(dialog.FileName, wzMapleVersionSelected);
+                    WzFile loadedWzFile = Program.WzFileManager.LoadWzFile(dialog.FileName, wzMapleVersionSelected, wzf.Version);
                     if (loadedWzFile != null)
                     {
                         _mainPanel.MainForm.AddLoadedWzObjectToMainPanel(loadedWzFile);

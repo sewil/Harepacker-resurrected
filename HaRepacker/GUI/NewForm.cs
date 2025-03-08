@@ -31,7 +31,7 @@ namespace HaRepacker.GUI
             SetWzEncryptionBoxSelectionByWzMapleVersion();
             defaultVersionIndex = encryptionBox.SelectedIndex;
 
-            versionBox.Value = 1;
+            versionBox.Text = "1";
             
             // change back to default
             Closed += (sender, args) => encryptionBox.SelectedIndex = defaultVersionIndex;
@@ -142,7 +142,7 @@ namespace HaRepacker.GUI
 
             if (regBox.Checked)
             {
-                WzFile file = new WzFile((short)versionBox.Value, wzMapleVersionSelected);
+                WzFile file = new WzFile(wzMapleVersionSelected, versionBox.Text);
                 file.Header.Copyright = copyrightBox.Text;
                 file.Header.RecalculateFileStart();
                 file.Name = name + ".wz";

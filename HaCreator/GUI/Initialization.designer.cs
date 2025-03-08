@@ -30,69 +30,29 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Initialization));
             button_initialise = new System.Windows.Forms.Button();
-            versionBox = new System.Windows.Forms.ComboBox();
+            wzEncryptionBox = new System.Windows.Forms.ComboBox();
+            gameVersionBox = new System.Windows.Forms.TextBox();
+            gameVersionLabel = new System.Windows.Forms.Label();
             toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            label2 = new System.Windows.Forms.Label();
-            label3 = new System.Windows.Forms.Label();
-            textBox2 = new System.Windows.Forms.TextBox();
+            wzEncryptionLabel = new System.Windows.Forms.Label();
+            pathLabel = new System.Windows.Forms.Label();
+            statusTextBox = new System.Windows.Forms.TextBox();
             pathBox = new System.Windows.Forms.ComboBox();
-            button2 = new System.Windows.Forms.Button();
+            browseButton = new System.Windows.Forms.Button();
             button_checkMapErrors = new System.Windows.Forms.Button();
-            label1 = new System.Windows.Forms.Label();
+            localisationLabel = new System.Windows.Forms.Label();
             comboBox_localisation = new System.Windows.Forms.ComboBox();
-            label4 = new System.Windows.Forms.Label();
+            localisationDisclaimer = new System.Windows.Forms.Label();
             SuspendLayout();
-            // 
-            // button_initialise
-            // 
-            button_initialise.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            button_initialise.Location = new System.Drawing.Point(4, 137);
-            button_initialise.Name = "button_initialise";
-            button_initialise.Size = new System.Drawing.Size(247, 28);
-            button_initialise.TabIndex = 1;
-            button_initialise.Text = "Initialize";
-            button_initialise.Click += button_initialise_Click;
-            // 
-            // versionBox
-            // 
-            versionBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            versionBox.FormattingEnabled = true;
-            versionBox.Items.AddRange(new object[] { "GMS", "EMS , MSEA , KMS", "BMS , JMS", "Auto-Detect" });
-            versionBox.Location = new System.Drawing.Point(142, 38);
-            versionBox.Name = "versionBox";
-            versionBox.Size = new System.Drawing.Size(227, 21);
-            versionBox.TabIndex = 3;
-            // 
-            // toolStripProgressBar1
-            // 
-            toolStripProgressBar1.Name = "toolStripProgressBar1";
-            toolStripProgressBar1.Size = new System.Drawing.Size(150, 16);
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(6, 40);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(85, 13);
-            label2.TabIndex = 8;
-            label2.Text = "WZ encryption:";
             // 
             // label3
             // 
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(6, 15);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(33, 13);
-            label3.TabIndex = 9;
-            label3.Text = "Path:";
-            // 
-            // textBox2
-            // 
-            textBox2.Location = new System.Drawing.Point(4, 171);
-            textBox2.Name = "textBox2";
-            textBox2.ReadOnly = true;
-            textBox2.Size = new System.Drawing.Size(364, 22);
-            textBox2.TabIndex = 2;
+            pathLabel.AutoSize = true;
+            pathLabel.Location = new System.Drawing.Point(6, 15);
+            pathLabel.Name = "label3";
+            pathLabel.Size = new System.Drawing.Size(33, 13);
+            pathLabel.TabIndex = 9;
+            pathLabel.Text = "Path:";
             // 
             // pathBox
             // 
@@ -104,33 +64,59 @@
             // 
             // button2
             // 
-            button2.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
-            button2.Location = new System.Drawing.Point(315, 11);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(54, 21);
-            button2.TabIndex = 14;
-            button2.Text = "...";
-            button2.Click += button2_Click;
+            browseButton.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            browseButton.Location = new System.Drawing.Point(315, 11);
+            browseButton.Name = "button2";
+            browseButton.Size = new System.Drawing.Size(54, 21);
+            browseButton.TabIndex = 14;
+            browseButton.Text = "...";
+            browseButton.Click += browseButton_Click;
             // 
-            // button_checkMapErrors
+            // label2
             // 
-            button_checkMapErrors.Location = new System.Drawing.Point(257, 137);
-            button_checkMapErrors.Name = "button_checkMapErrors";
-            button_checkMapErrors.Size = new System.Drawing.Size(111, 28);
-            button_checkMapErrors.TabIndex = 15;
-            button_checkMapErrors.Text = "Check map errors";
-            button_checkMapErrors.UseVisualStyleBackColor = true;
-            button_checkMapErrors.Click += debugButton_Click;
+            wzEncryptionLabel.AutoSize = true;
+            wzEncryptionLabel.Location = new System.Drawing.Point(6, 40);
+            wzEncryptionLabel.Name = "label2";
+            wzEncryptionLabel.Size = new System.Drawing.Size(85, 13);
+            wzEncryptionLabel.TabIndex = 8;
+            wzEncryptionLabel.Text = "WZ encryption:";
+            // 
+            // versionBox
+            // 
+            wzEncryptionBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            wzEncryptionBox.FormattingEnabled = true;
+            wzEncryptionBox.Items.AddRange(new object[] { "GMS", "EMS , MSEA , KMS", "BMS , JMS", "Auto-Detect" });
+            wzEncryptionBox.Location = new System.Drawing.Point(142, 38);
+            wzEncryptionBox.Name = "versionBox";
+            wzEncryptionBox.Size = new System.Drawing.Size(227, 21);
+            wzEncryptionBox.TabIndex = 3;
+            // 
+            // gameVersionLabel
+            // 
+            gameVersionLabel.AutoSize = true;
+            gameVersionLabel.Enabled = true;
+            gameVersionLabel.Location = new System.Drawing.Point(5, 69);
+            gameVersionLabel.Name = "gameVersionLabel";
+            gameVersionLabel.Size = new System.Drawing.Size(102, 13);
+            gameVersionLabel.TabIndex = 17;
+            gameVersionLabel.Text = "Version:";
+            //
+            // gameVersionBox
+            //
+            gameVersionBox.Name = "gameVersionBox";
+            gameVersionBox.Size = new System.Drawing.Size(227, 21);
+            gameVersionBox.Location = new System.Drawing.Point(142, 67);
+            gameVersionBox.PlaceholderText = "Detect automatically";
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Enabled = false;
-            label1.Location = new System.Drawing.Point(5, 69);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(102, 13);
-            label1.TabIndex = 17;
-            label1.Text = "Client localisation:";
+            localisationLabel.AutoSize = true;
+            localisationLabel.Enabled = false;
+            localisationLabel.Location = new System.Drawing.Point(5, 100);
+            localisationLabel.Name = "label1";
+            localisationLabel.Size = new System.Drawing.Size(102, 13);
+            localisationLabel.TabIndex = 17;
+            localisationLabel.Text = "Client localisation:";
             // 
             // comboBox_localisation
             // 
@@ -138,37 +124,74 @@
             comboBox_localisation.Enabled = false;
             comboBox_localisation.FormattingEnabled = true;
             comboBox_localisation.Items.AddRange(new object[] { "GMS", "EMS , MSEA , KMS", "BMS , JMS", "Auto-Detect" });
-            comboBox_localisation.Location = new System.Drawing.Point(141, 67);
+            comboBox_localisation.Location = new System.Drawing.Point(141, 100);
             comboBox_localisation.Name = "comboBox_localisation";
             comboBox_localisation.Size = new System.Drawing.Size(228, 21);
             comboBox_localisation.TabIndex = 16;
             // 
             // label4
             // 
-            label4.Enabled = false;
-            label4.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            label4.Location = new System.Drawing.Point(4, 91);
-            label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(365, 33);
-            label4.TabIndex = 18;
-            label4.Text = "Please select the right localisation, as the saved .wz data parameters might be different.";
+            localisationDisclaimer.Enabled = false;
+            localisationDisclaimer.Font = new System.Drawing.Font("Segoe UI", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            localisationDisclaimer.Location = new System.Drawing.Point(4, 125);
+            localisationDisclaimer.Name = "label4";
+            localisationDisclaimer.Size = new System.Drawing.Size(365, 33);
+            localisationDisclaimer.TabIndex = 18;
+            localisationDisclaimer.Text = "Please select the right localisation, as the saved .wz data parameters might be different.";
+            // 
+            // button_initialise
+            // 
+            button_initialise.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
+            button_initialise.Location = new System.Drawing.Point(4, 161);
+            button_initialise.Name = "button_initialise";
+            button_initialise.Size = new System.Drawing.Size(247, 28);
+            button_initialise.TabIndex = 1;
+            button_initialise.Text = "Initialize";
+            button_initialise.Click += button_initialise_Click;
+            
+            // 
+            // toolStripProgressBar1
+            // 
+            toolStripProgressBar1.Name = "toolStripProgressBar1";
+            toolStripProgressBar1.Size = new System.Drawing.Size(150, 40);
+            // 
+            // statusTextBox
+            // 
+            statusTextBox.Location = new System.Drawing.Point(4, 195);
+            statusTextBox.Name = "textBox2";
+            statusTextBox.ReadOnly = true;
+            statusTextBox.Size = new System.Drawing.Size(364, 22);
+            statusTextBox.TabIndex = 2;
+            // 
+            // button_checkMapErrors
+            // 
+            button_checkMapErrors.Location = new System.Drawing.Point(257, 161);
+            button_checkMapErrors.Name = "button_checkMapErrors";
+            button_checkMapErrors.Size = new System.Drawing.Size(111, 28);
+            button_checkMapErrors.TabIndex = 15;
+            button_checkMapErrors.Text = "Check map errors";
+            button_checkMapErrors.UseVisualStyleBackColor = true;
+            button_checkMapErrors.Click += debugButton_Click;
+            
             // 
             // Initialization
             // 
             AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            ClientSize = new System.Drawing.Size(372, 196);
-            Controls.Add(label4);
-            Controls.Add(label1);
-            Controls.Add(comboBox_localisation);
-            Controls.Add(button_checkMapErrors);
-            Controls.Add(button2);
+            ClientSize = new System.Drawing.Size(372, 220);
+            Controls.Add(pathLabel);
             Controls.Add(pathBox);
-            Controls.Add(label3);
-            Controls.Add(label2);
-            Controls.Add(versionBox);
-            Controls.Add(textBox2);
+            Controls.Add(wzEncryptionLabel);
+            Controls.Add(wzEncryptionBox);
+            Controls.Add(gameVersionLabel);
+            Controls.Add(gameVersionBox);
+            Controls.Add(localisationLabel);
+            Controls.Add(comboBox_localisation);
+            Controls.Add(localisationDisclaimer);
+            Controls.Add(button_checkMapErrors);
+            Controls.Add(browseButton);
+            Controls.Add(statusTextBox);
             Controls.Add(button_initialise);
             Font = new System.Drawing.Font("Segoe UI", 8.25F);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -187,17 +210,19 @@
         #endregion
 
         private System.Windows.Forms.Button button_initialise;
-        private System.Windows.Forms.ComboBox versionBox;
+        private System.Windows.Forms.ComboBox wzEncryptionBox;
+        private System.Windows.Forms.Label gameVersionLabel;
+        private System.Windows.Forms.TextBox gameVersionBox;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label wzEncryptionLabel;
+        private System.Windows.Forms.Label pathLabel;
+        private System.Windows.Forms.TextBox statusTextBox;
         private System.Windows.Forms.ComboBox pathBox;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Button button_checkMapErrors;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label localisationLabel;
         private System.Windows.Forms.ComboBox comboBox_localisation;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label localisationDisclaimer;
     }
 }
 

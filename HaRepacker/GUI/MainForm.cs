@@ -70,6 +70,8 @@ namespace HaRepacker.GUI
             // Set encryption box
             SetWzEncryptionBoxSelectionByWzMapleVersion(Program.ConfigurationManager.ApplicationSettings.MapleVersion);
 
+            gameVersionBox.Text = Program.ConfigurationManager.ApplicationSettings.GameVersion;
+
 
             WindowState = Program.ConfigurationManager.ApplicationSettings.WindowMaximized ? FormWindowState.Maximized : FormWindowState.Normal;
             Size = new Size(
@@ -123,7 +125,7 @@ namespace HaRepacker.GUI
             }
             if (wzPathToLoad != null && File.Exists(wzPathToLoad))
             {
-                short version;
+                string version;
                 WzMapleVersion encVersion = WzTool.DetectMapleVersion(wzPathToLoad, out version);
                 SetWzEncryptionBoxSelectionByWzMapleVersion(encVersion);
 
@@ -176,7 +178,7 @@ namespace HaRepacker.GUI
         {
             try
             {
-                WzFile loadedWzFile = Program.WzFileManager.LoadWzFile(path, (WzMapleVersion)GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex));
+                WzFile loadedWzFile = Program.WzFileManager.LoadWzFile(path, (WzMapleVersion)GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex), GetGameVersionByTextbox());
                 if (loadedWzFile != null)
                 {
                     WzNode node = new WzNode(loadedWzFile);
@@ -298,6 +300,7 @@ namespace HaRepacker.GUI
         {
             // Get the current loaded wz file information
             WzMapleVersion encVersion = existingLoadedWzFile.MapleVersion;
+            string gameVersion = existingLoadedWzFile.Version;
             string path = existingLoadedWzFile.FilePath;
             
             // Unload it
@@ -312,10 +315,10 @@ namespace HaRepacker.GUI
                 UnloadWzFile(existingLoadedWzFile, currentDispatcher);
 
             // Load the new wz file from the same path
-            WzFile newWzFile = Program.WzFileManager.LoadWzFile(path, encVersion);
+            WzFile newWzFile = Program.WzFileManager.LoadWzFile(path, encVersion, gameVersion);
             if (newWzFile != null)
             {
-                AddLoadedWzObjectToMainPanel(newWzFile, currentDispatcher);  
+                AddLoadedWzObjectToMainPanel(newWzFile, currentDispatcher);
             }
         }
 
@@ -460,6 +463,11 @@ namespace HaRepacker.GUI
             }
         }
 
+        public void GameVersionBox_TextChanged(object sender, EventArgs e)
+        {
+            Program.ConfigurationManager.ApplicationSettings.GameVersion = GetGameVersionByTextbox();
+        }
+
         /// <summary>
         /// Gets the WzMapleVersion enum by encryptionBox selection index
         /// </summary>
@@ -537,6 +545,14 @@ namespace HaRepacker.GUI
             {
                 Program.ConfigurationManager.SetCustomWzUserKeyFromConfig();
             }
+        }
+        #endregion
+
+        #region Game version textbox
+        private string GetGameVersionByTextbox()
+        {
+            if (string.IsNullOrWhiteSpace(gameVersionBox.Text)) return null;
+            else return gameVersionBox.Text.Trim();
         }
         #endregion
 
@@ -778,6 +794,7 @@ namespace HaRepacker.GUI
             Dispatcher currentDispatcher = Dispatcher.CurrentDispatcher;
 
             WzMapleVersion MapleVersionEncryptionSelected = GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex);
+            string gameVersion = GetGameVersionByTextbox();
 
             List<string> wzfilePathsToLoad = new List<string>();
 
@@ -918,7 +935,7 @@ namespace HaRepacker.GUI
                 List<WzFile> loadedWzFiles = new List<WzFile>();
                 ParallelLoopResult loop = Parallel.ForEach(wzfilePathsToLoad, filePath =>
                 {
-                    WzFile f = Program.WzFileManager.LoadWzFile(filePath, MapleVersionEncryptionSelected);
+                    WzFile f = Program.WzFileManager.LoadWzFile(filePath, MapleVersionEncryptionSelected, gameVersion);
                     if (f == null) {
                         // error should be thrown 
                     }
@@ -979,6 +996,7 @@ namespace HaRepacker.GUI
             Dispatcher currentDispatcher = Dispatcher.CurrentDispatcher;
 
             WzMapleVersion MapleVersionEncryptionSelected = GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex);
+            string gameVersion = GetGameVersionByTextbox();
 
             // Load WZ file
             using (FolderBrowserDialog fbd = new FolderBrowserDialog()
@@ -1019,7 +1037,7 @@ namespace HaRepacker.GUI
                     List<WzFile> loadedWzFiles = new List<WzFile>();
                     ParallelLoopResult loop = Parallel.ForEach(wzfilePathsToLoad, filePath =>
                     {
-                        WzFile f = Program.WzFileManager.LoadWzFile(filePath, MapleVersionEncryptionSelected);
+                        WzFile f = Program.WzFileManager.LoadWzFile(filePath, MapleVersionEncryptionSelected, gameVersion);
                         if (f == null)
                         {
                             // error should be thrown 
@@ -1261,6 +1279,7 @@ namespace HaRepacker.GUI
             string baseDir = (string)((object[])param)[1];
             WzMapleVersion version = GetWzMapleVersionByWzEncryptionBoxSelection((int)(((object[])param)[2]));
             IWzFileSerializer serializer = (IWzFileSerializer)((object[])param)[3];
+            string gameVersion = GetGameVersionByTextbox();
 
             UpdateProgressBar(MainPanel.mainProgressBar, 0, false, true);
             UpdateProgressBar(MainPanel.mainProgressBar, wzFilesToDump.Length, true, true);
@@ -1277,7 +1296,7 @@ namespace HaRepacker.GUI
                     Warning.Error(string.Format(HaRepacker.Properties.Resources.MainListWzDetected, wzpath));
                     continue;
                 }
-                WzFile f = new WzFile(wzpath, version);
+                WzFile f = new WzFile(wzpath, gameVersion, version);
 
                 WzFileParseStatus parseStatus = f.ParseWzFile();
 
@@ -1920,7 +1939,7 @@ namespace HaRepacker.GUI
         {
             // Map name load
             string loadedWzVersion;
-            WzStringSearchFormDataCache dataCache = new WzStringSearchFormDataCache(GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex));
+            WzStringSearchFormDataCache dataCache = new WzStringSearchFormDataCache(GetWzMapleVersionByWzEncryptionBoxSelection(encryptionBox.SelectedIndex), GetGameVersionByTextbox());
             if (dataCache.OpenBaseWZFile(out loadedWzVersion))
             {
                 WzStringSearchForm form = new WzStringSearchForm(dataCache, loadedWzVersion);

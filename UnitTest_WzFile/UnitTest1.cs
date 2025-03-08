@@ -12,7 +12,7 @@ namespace UnitTest_WzFile
     [TestClass]
     public class UnitTest1
     {
-        private static WzFileManager _fileManager = new WzFileManager("", false, false);
+        private static WzFileManager _fileManager = new WzFileManager();
 
         private static readonly List<Tuple<string, WzMapleVersion>> _testFiles = new List<Tuple<string, WzMapleVersion>>();
 
@@ -119,7 +119,7 @@ namespace UnitTest_WzFile
 
                 try
                 {
-                    WzFile f = new WzFile(filePath, (short)-1, wzMapleVerEnc);
+                    WzFile f = new WzFile(filePath, null, wzMapleVerEnc);
 
                     WzFileParseStatus parseStatus = f.ParseWzFile();
 
