@@ -327,6 +327,8 @@ namespace HaRepacker.GUI
         {
             WzNode node = (WzNode)file.HRTag; // get the ref first
 
+            Program.WzFileManager ??= new WzFileManager();
+
             // unload the wz file
             Program.WzFileManager.UnloadWzFile(file, file.FilePath);
 
