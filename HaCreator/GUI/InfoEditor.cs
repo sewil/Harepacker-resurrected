@@ -200,6 +200,8 @@ namespace HaCreator.GUI
             optionsList.SetChecked(20, info.allMoveCheck);
             optionsList.SetChecked(21, info.VRLimit);
             optionsList.SetChecked(22, info.mirror_Bottom);
+            optionsList.SetChecked(23, info.unableToShop);
+            optionsList.SetChecked(24, info.unableToChangeChannel);
 
             // Populate field limit items
             // automatically populated via fieldLimitPanel1.Loaed
@@ -511,6 +513,8 @@ namespace HaCreator.GUI
                 info.allMoveCheck = optionsList.Checked(20);
                 info.VRLimit = optionsList.Checked(21);
                 info.mirror_Bottom = optionsList.Checked(22);
+                info.unableToShop = optionsList.Checked(23);
+                info.unableToChangeChannel = optionsList.Checked(24);
 
                 info.fieldLimit = (long) fieldLimitPanel1.FieldLimit;
 

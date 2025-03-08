@@ -1546,7 +1546,10 @@ namespace HaCreator.GUI
             "Zakum-2 JQ Anti-Hack",
             "Check All Moves (Anti-Hack)",
             "Use VR as Limits",
-            "Mirror Bottom (Reflection)"});
+            "Mirror Bottom (Reflection)",
+            "Unable to shop",
+            "Unable to change channels"
+            });
             this.optionsList.Location = new System.Drawing.Point(6, 24);
             this.optionsList.Name = "optionsList";
             this.optionsList.Size = new System.Drawing.Size(165, 446);
