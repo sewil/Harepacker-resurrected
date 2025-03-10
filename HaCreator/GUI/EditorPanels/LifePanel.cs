@@ -115,10 +115,10 @@ namespace HaCreator.GUI.EditorPanels
                 {
                     string reactorIdName = (string)lifeListBox.SelectedItem;
 
-                    const string regexPattern = @"^\d+"; // "1002009 (메이플아일랜드 범용리엑터)"
-                    string number = Regex.Match(reactorIdName, regexPattern).Value;
+                    const string regexPattern = @"^[A-Za-z\d]+"; // "pcBoxItem0 (메이플아일랜드 범용리엑터)"
+                    string reactorId = Regex.Match(reactorIdName, regexPattern).Value;
 
-                    ReactorInfo info = Program.InfoManager.Reactors[number];
+                    ReactorInfo info = Program.InfoManager.Reactors[reactorId];
                     lifePictureBox.Image = new Bitmap(info.Image);
                     hcsm.EnterEditMode(ItemTypes.Reactors);
                     hcsm.MultiBoard.SelectedBoard.Mouse.SetHeldInfo(info);
