@@ -20,6 +20,7 @@ using MapleLib.WzLib.WzStructure;
 using System.Data.SQLite;
 using HaCreator.GUI.InstanceEditor;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace HaCreator.CustomControls
 {
@@ -29,7 +30,7 @@ namespace HaCreator.CustomControls
 
         private bool _bMapsLoaded = false;
         private readonly List<string> maps = new List<string>(); // cache
-        private readonly Dictionary<string, Tuple<WzImage, MapInfo>> mapsMapInfo = new Dictionary<string, Tuple<WzImage, MapInfo>>();
+        private readonly Dictionary<string, (WzImage mapImage, MapInfo info)> mapsMapInfo = [];
 
         private bool _bTownOnlyFilter = false;
         private bool _bIsHistoryMapBrowser = false;
@@ -130,15 +131,14 @@ namespace HaCreator.CustomControls
             // Maps
             // Loop through the list of loaded 'maps' against 'mapNames', so maps would appear even if there isnt a name for it yet.
             // this allows map naming later.
-            foreach (KeyValuePair<string, Tuple<WzImage, string, string, string, MapInfo>> map in Program.InfoManager.MapsCache) // list of loaded maps
+            foreach (var map in Program.InfoManager.MapsCache) // list of loaded maps
             {
-                string streetName = map.Value.Item2;
-                string mapName = map.Value.Item3;
+                (WzImage mapImage, string streetName, string mapName, _, MapInfo info) = map.Value;
 
                 string displayMapNameString = string.Format("{0} - {1} : {2}", map.Key, streetName, mapName);
 
                 maps.Add(displayMapNameString);
-                mapsMapInfo.Add(displayMapNameString, new Tuple<WzImage, MapInfo>(map.Value.Item1, map.Value.Item5));
+                mapsMapInfo.Add(displayMapNameString, (mapImage, info));
             }
 
             maps.Sort();
@@ -193,11 +193,11 @@ namespace HaCreator.CustomControls
                     string mapid_str = OpenedMapName.Substring(0, Math.Min(OpenedMapName.Length, 9));
 
                     if (Program.InfoManager.MapsCache.ContainsKey(mapid_str)) {
-                        Tuple<WzImage, string, string, string, MapInfo> loadedMap = Program.InfoManager.MapsCache[mapid_str];
+                        (WzImage mapImage, _, _, _, MapInfo info) = Program.InfoManager.MapsCache[mapid_str];
 
                         maps.Add(OpenedMapName);
                         if (!mapsMapInfo.ContainsKey(OpenedMapName))
-                            mapsMapInfo.Add(OpenedMapName, new Tuple<WzImage, MapInfo>(loadedMap.Item1, loadedMap.Item5));
+                            mapsMapInfo.Add(OpenedMapName, (mapImage, info));
                     }
                 }
                 object[] mapsObjs = maps.Cast<object>().ToArray();
@@ -273,7 +273,7 @@ namespace HaCreator.CustomControls
             {
                 string mapid = (selectedName).Substring(0, 9);
 
-                Tuple<WzImage, MapInfo> mapTupleInfo = null;
+                (WzImage mapImage, MapInfo info)? mapTupleInfo = null;
                 if (mapsMapInfo.ContainsKey(selectedName)) {
                     mapTupleInfo = mapsMapInfo[selectedName];
                 }
@@ -289,13 +289,14 @@ namespace HaCreator.CustomControls
                 }
                 else
                 {
-                    using (WzImageResource rsrc = new WzImageResource(mapTupleInfo.Item1))
+                    var mapImage = mapTupleInfo.Value.mapImage;
+                    using (WzImageResource rsrc = new WzImageResource(mapImage))
                     {
-                        if (mapTupleInfo.Item1["info"]["link"] != null)
+                        if (mapImage["info"]["link"] != null)
                         {
                             panel_linkWarning.Visible = true;
                             panel_mapExistWarning.Visible = false;
-                            label_linkMapId.Text = mapTupleInfo.Item1["info"]["link"].ToString();
+                            label_linkMapId.Text = mapImage["info"]["link"].ToString();
 
                             minimapBox.Image = new Bitmap(1, 1);
                             bLoadMapEnabled = false;
@@ -306,7 +307,7 @@ namespace HaCreator.CustomControls
                             panel_mapExistWarning.Visible = false;
 
                             bLoadMapEnabled = true;
-                            WzCanvasProperty minimap = (WzCanvasProperty)mapTupleInfo.Item1.GetFromPath("miniMap/canvas");
+                            WzCanvasProperty minimap = (WzCanvasProperty)mapImage.GetFromPath("miniMap/canvas");
                             if (minimap != null)
                             {
                                 minimapBox.Image = minimap.GetLinkedWzCanvasBitmap();

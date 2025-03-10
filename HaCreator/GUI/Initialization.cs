@@ -1049,12 +1049,13 @@ namespace HaCreator.GUI
                     string categoryName = map.Parent.Name;
 
                     if (mapNameWzProp == null)
-                        Program.InfoManager.MapsNameCache[mapIdStr] = new Tuple<string, string, string>("NO NAME", "NO NAME", "NO NAME");
+                        Program.InfoManager.MapsNameCache[mapIdStr] = ("NO NAME", "NO NAME", "NO NAME");
                     else {
-                        Program.InfoManager.MapsNameCache[mapIdStr] = new Tuple<string, string, string>(
-                            streetNameWzProp?.Value == null ? string.Empty : streetNameWzProp.Value, 
+                        Program.InfoManager.MapsNameCache[mapIdStr] = (
+                            streetNameWzProp?.Value == null ? string.Empty : streetNameWzProp.Value,
                             mapNameWzProp.Value,
-                            categoryName);
+                            categoryName
+                        );
                     }
                 }
             }
@@ -1347,20 +1348,17 @@ namespace HaCreator.GUI
 
                     if (Program.InfoManager.MapsNameCache.ContainsKey(mapId))
                     {
-                        var mapNames = Program.InfoManager.MapsNameCache[mapId];
-                        mapName = mapNames.Item1;
-                        streetName = mapNames.Item2;
-                        categoryName = mapNames.Item3;
+                        (streetName, mapName, categoryName) = Program.InfoManager.MapsNameCache[mapId];
                     }
                     if (mapImage["info"] != null)
                     {
-                        MapInfo info = new MapInfo(mapImage, mapName, streetName, categoryName);
+                        MapInfo info = new(mapImage, mapName, streetName, categoryName);
 
                         // Ensure thread safety when writing to the shared resource
                         lock (Program.InfoManager.MapsCache)
                         {
-                            Program.InfoManager.MapsCache[val.Key] = new Tuple<WzImage, string, string, string, MapInfo>(
-                                mapImage, mapName, streetName, categoryName, info
+                            Program.InfoManager.MapsCache[val.Key] = (
+                                mapImage, streetName, mapName, categoryName, info
                             );
                         }
                     } else

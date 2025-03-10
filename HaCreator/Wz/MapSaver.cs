@@ -1272,8 +1272,11 @@ namespace HaCreator.Wz
 
         public void UpdateMapLists()
         {
-            Program.InfoManager.MapsNameCache[WzInfoTools.AddLeadingZeros(board.MapInfo.id.ToString(), 9)] =
-                new Tuple<string, string, string>(board.MapInfo.strStreetName, board.MapInfo.strMapName, board.MapInfo.strCategoryName);
+            Program.InfoManager.MapsNameCache[WzInfoTools.AddLeadingZeros(board.MapInfo.id.ToString(), 9)] = (
+                board.MapInfo.strStreetName,
+                board.MapInfo.strMapName,
+                board.MapInfo.strCategoryName
+            );
         }
     }
 

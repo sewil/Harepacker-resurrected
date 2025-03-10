@@ -273,13 +273,7 @@ namespace HaCreator.GUI
 
                     if (Program.InfoManager.MapsCache.ContainsKey(mapid_str))
                     {
-                        Tuple<WzImage, string, string, string, MapInfo> loadedMap = Program.InfoManager.MapsCache[mapid_str];
-
-                        mapImage = loadedMap.Item1;
-                        mapName = loadedMap.Item2;
-                        streetName = loadedMap.Item3;
-                        categoryName = loadedMap.Item4;
-                        info = loadedMap.Item5;
+                        (mapImage, streetName, mapName, categoryName, info) = Program.InfoManager.MapsCache[mapid_str];
                     }
                     else
                     {

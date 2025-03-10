@@ -25,8 +25,8 @@ namespace HaCreator.Converter
             {
                 return string.Empty;
             }
-            Tuple<string, string, string> map = Program.InfoManager.MapsNameCache[mapStr];
-            string mapName = string.Format("{0} - {1}", map.Item1, map.Item2);
+            var map = Program.InfoManager.MapsNameCache[mapStr];
+            string mapName = string.Format("{0} - {1}", map.streetName, map.mapName);
 
             return mapName;
         }

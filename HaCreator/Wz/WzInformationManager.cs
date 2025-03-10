@@ -31,8 +31,8 @@ namespace HaCreator.Wz
 
         // Maps
         public Dictionary<string, Bitmap> MapMarks = new Dictionary<string, Bitmap>();
-        public Dictionary<string, Tuple<string, string, string>> MapsNameCache = new Dictionary<string, Tuple<string, string, string>>(); // street name, map name, category name
-        public Dictionary<string, Tuple<WzImage, string, string, string, MapInfo>> MapsCache = new Dictionary<string, Tuple<WzImage, string, string, string, MapInfo>>(); // mapImage, strMapProp, mapName, streetName, categoryName, info
+        public Dictionary<string, (string streetName, string mapName, string categoryName)> MapsNameCache = [];
+        public Dictionary<string, (WzImage mapImage, string streetName, string mapName, string categoryName, MapInfo info)> MapsCache = [];
 
         // Item 
         public Dictionary<int, Tuple<string, string, string>> ItemNameCache = new Dictionary<int, Tuple<string, string, string>>(); // itemid, <item category, item name, item desc>
