@@ -30,6 +30,7 @@ namespace HaCreator.GUI.InstanceEditor
             cyBox.Tag = cyInt;
             rxBox.Tag = rxInt;
             ryBox.Tag = ryInt;
+            reactorTimeCheckbox.Tag = reactorTimeInt;
             nameEnable.Tag = nameBox;
             questEnable.Tag = new Control[] { questAdd, questRemove, questList };
             tagsEnable.Tag = tagsBox;
@@ -38,6 +39,8 @@ namespace HaCreator.GUI.InstanceEditor
             xInput.Value = item.X;
             yInput.Value = item.Y;
             zInput.Value = item.Z;
+            reactorBox.Checked = item.reactor;
+            SetOptionalInt(reactorTimeInt, reactorTimeCheckbox, item.reactorTime);
             rBox.Checked = item.r;
             flipBox.Checked = item.Flip;
             hideBox.Checked = !item.hide.HasValue ? false : item.hide.Value;
@@ -52,10 +55,11 @@ namespace HaCreator.GUI.InstanceEditor
             SetOptionalInt(ryInt, ryBox, item.ry);
             SetOptionalInt(cxInt, cxBox, item.cx);
             SetOptionalInt(cyInt, cyBox, item.cy);
-            if (item.tags == null) 
+            if (item.tags == null)
                 tagsEnable.Checked = false;
-            else { 
-                tagsEnable.Checked = true; tagsBox.Text = item.tags; 
+            else
+            {
+                tagsEnable.Checked = true; tagsBox.Text = item.tags;
             }
 
             if (item.QuestInfo != null)
@@ -97,6 +101,7 @@ namespace HaCreator.GUI.InstanceEditor
                 item.Name = nameEnable.Checked ? nameBox.Text : null;
                 item.flow = flowBox.Checked;
                 item.reactor = reactorBox.Checked;
+                item.reactorTime = GetOptionalInt(reactorTimeInt, reactorTimeCheckbox);
                 item.r = rBox.Checked;
                 item.Flip = flipBox.Checked;
                 item.hide = hideBox.Checked;

@@ -208,6 +208,7 @@ namespace HaCreator.Wz
                         obj["r"] = InfoTool.SetOptionalBool(objInst.r);
                         obj["hide"] = InfoTool.SetOptionalBool(objInst.hide);
                         obj["reactor"] = InfoTool.SetOptionalBool(objInst.reactor);
+                        obj["reactorTime"] = InfoTool.SetOptionalInt(objInst.reactorTime);
                         obj["flow"] = InfoTool.SetOptionalBool(objInst.flow);
                         obj["rx"] = InfoTool.SetOptionalTranslatedInt(objInst.rx);
                         obj["ry"] = InfoTool.SetOptionalTranslatedInt(objInst.ry);

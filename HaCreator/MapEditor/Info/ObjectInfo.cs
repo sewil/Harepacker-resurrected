@@ -174,14 +174,14 @@ namespace HaCreator.MapEditor.Info
 
         public override BoardItem CreateInstance(Layer layer, Board board, int x, int y, int z, bool flip)
         {
-            ObjectInstance instance = new ObjectInstance(this, layer, board, x, y, z, layer.zMDefault, false, false, false, false, null, null, null, null, null, null, null, flip);
+            ObjectInstance instance = new ObjectInstance(this, layer, board, x, y, z, layer.zMDefault, false, false, false, null, false, null, null, null, null, null, null, null, flip);
             ParseOffsets(instance, board, x, y);
             return instance;
         }
 
-        public BoardItem CreateInstance(Layer layer, Board board, int x, int y, int z, int zM, MapleBool r, MapleBool hide, MapleBool reactor, MapleBool flow, int? rx, int? ry, int? cx, int? cy, string name, string tags, List<ObjectInstanceQuest> questInfo, bool flip, bool parseOffsets)
+        public BoardItem CreateInstance(Layer layer, Board board, int x, int y, int z, int zM, MapleBool r, MapleBool hide, MapleBool reactor, int? reactorTime, MapleBool flow, int? rx, int? ry, int? cx, int? cy, string name, string tags, List<ObjectInstanceQuest> questInfo, bool flip, bool parseOffsets)
         {
-            ObjectInstance instance = new ObjectInstance(this, layer, board, x, y, z, zM, r, hide, reactor, flow, rx, ry, cx, cy, name, tags, questInfo, flip);
+            ObjectInstance instance = new ObjectInstance(this, layer, board, x, y, z, zM, r, hide, reactor, reactorTime, flow, rx, ry, cx, cy, name, tags, questInfo, flip);
             if (parseOffsets) ParseOffsets(instance, board, x, y);
             return instance;
         }
