@@ -462,7 +462,6 @@ namespace HaCreator.GUI
                     MapLoader.LoadRopes(mapImage, mapBoard);
                     MapLoader.LoadChairs(mapImage, mapBoard);
                     MapLoader.LoadPortals(mapImage, mapBoard);
-                    MapLoader.LoadReactors(mapImage, mapBoard);
                     MapLoader.LoadToolTips(mapImage, mapBoard);
                     MapLoader.LoadBackgrounds(mapImage, mapBoard);
                     MapLoader.LoadMisc(mapImage, mapBoard);

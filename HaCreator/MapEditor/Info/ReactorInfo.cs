@@ -72,14 +72,7 @@ namespace HaCreator.MapEditor.Info
         {
             if (Image == null) 
                 ParseImage();
-            return new ReactorInstance(this, board, x, y, UserSettings.defaultReactorTime, "", flip);
-        }
-
-        public BoardItem CreateInstance(Board board, int x, int y, int reactorTime, string name, bool flip)
-        {
-            if (Image == null) 
-                ParseImage();
-            return new ReactorInstance(this, board, x, y, reactorTime, name, flip);
+            return new ReactorInstance(this, board, layer, x, y, z, UserSettings.defaultReactorTime, "", flip);
         }
 
         public string ID

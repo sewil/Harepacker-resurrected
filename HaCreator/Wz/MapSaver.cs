@@ -171,6 +171,8 @@ namespace HaCreator.Wz
 
         public void SaveLayers()
         {
+            int reactorIndex = 0;
+            WzSubProperty reactorParent = new WzSubProperty();
             for (int layer = 0; layer <= MapConstants.MaxMapLayers; layer++)
             {
                 WzSubProperty layerProp = new WzSubProperty();
@@ -226,6 +228,11 @@ namespace HaCreator.Wz
                         }
                         obj["f"] = InfoTool.SetBool(objInst.Flip);
 
+                        if (objInst.reactor)
+                        {
+                            SaveReactor(item, objInst, objIndex, reactorParent, reactorIndex++);
+                        }
+
                         objParent[objIndex.ToString()] = obj;
                         objIndex++;
                     }
@@ -261,6 +268,7 @@ namespace HaCreator.Wz
 
                 image[layer.ToString()] = layerProp;
             }
+            image["reactor"] = reactorParent;
         }
 
         public void SaveRopes()
@@ -333,24 +341,12 @@ namespace HaCreator.Wz
             image["portal"] = portalParent;
         }
 
-        public void SaveReactors()
+        public void SaveReactor(LayeredItem layer, ObjectInstance obj, int objIndex, WzSubProperty reactorParent, int reactorIndex)
         {
-            WzSubProperty reactorParent = new WzSubProperty();
-            for (int i = 0; i < board.BoardItems.Reactors.Count; i++)
-            {
-                ReactorInstance reactorInst = board.BoardItems.Reactors[i];
-                WzSubProperty reactor = new WzSubProperty();
-
-                reactor["x"] = InfoTool.SetInt(reactorInst.UnflippedX);
-                reactor["y"] = InfoTool.SetInt(reactorInst.Y);
-                reactor["reactorTime"] = InfoTool.SetInt(reactorInst.ReactorTime);
-                reactor["name"] = InfoTool.SetOptionalString(reactorInst.Name);
-                reactor["id"] = InfoTool.SetString(((ReactorInfo)reactorInst.BaseInfo).ID);
-                reactor["f"] = InfoTool.SetBool(reactorInst.Flip);
-
-                reactorParent[i.ToString()] = reactor;
-            }
-            image["reactor"] = reactorParent;
+            WzSubProperty reactor = new WzSubProperty();
+            reactor["pageIdx"] = InfoTool.SetInt(layer.LayerNumber);
+            reactor["pieceIdx"] = InfoTool.SetInt(objIndex);
+            reactorParent[reactorIndex.ToString()] = reactor;
         }
 
         public void SaveTooltips()
@@ -976,7 +972,6 @@ namespace HaCreator.Wz
             SaveRopes();
             SaveChairs();
             SavePortals();
-            SaveReactors();
             SaveTooltips();
             SaveBackgrounds();
             SaveFootholds();

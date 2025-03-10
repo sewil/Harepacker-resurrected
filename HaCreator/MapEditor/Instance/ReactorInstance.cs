@@ -5,6 +5,8 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 using HaCreator.MapEditor.Info;
+using HaSharedLibrary.Wz;
+using MapleLib.WzLib.WzProperties;
 using MapleLib.WzLib.WzStructure.Data;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -20,10 +22,13 @@ namespace HaCreator.MapEditor.Instance
     {
         private readonly ReactorInfo reactorInfo;
         public ReactorInfo ReactorInfo { get { return reactorInfo; } }
+        private readonly ObjectInfo objInfo;
+        public ObjectInfo ObjInfo { get { return objInfo; } }
 
         private int reactorTime;
         private bool flip;
         private string name;
+        private Layer layer;
 
         /// <summary>
         /// Constructor
@@ -35,13 +40,16 @@ namespace HaCreator.MapEditor.Instance
         /// <param name="reactorTime"></param>
         /// <param name="name"></param>
         /// <param name="flip"></param>
-        public ReactorInstance(ReactorInfo baseInfo, Board board, int x, int y, int reactorTime, string name, bool flip)
-            : base(board, x, y, -1)
+        public ReactorInstance(ReactorInfo baseInfo, Board board, Layer layer, int x, int y, int z, int reactorTime, string name, bool flip)
+            : base(board, x, y, z)
         {
+
             this.reactorInfo = baseInfo;
             this.reactorTime = reactorTime;
+            this.layer = layer;
             this.flip = flip;
             this.name = name;
+            this.objInfo = (ObjectInfo)baseInfo.LinkedWzObj.HCTag;
             if (flip)
                 X -= Width - 2 * Origin.X;
         }
@@ -130,6 +138,12 @@ namespace HaCreator.MapEditor.Instance
         {
             get { return name; }
             set { name = value; }
+        }
+
+        public Layer Layer
+        {
+            get { return layer; }
+            set { layer = value; }
         }
 
         public new class SerializationForm : BoardItem.SerializationForm

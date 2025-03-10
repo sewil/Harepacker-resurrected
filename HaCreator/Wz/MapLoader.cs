@@ -335,36 +335,6 @@ namespace HaCreator.Wz
             }
         }
 
-        public static void LoadReactors(WzImage mapImage, Board mapBoard)
-        {
-            WzSubProperty reactorParent = (WzSubProperty)mapImage["reactor"];
-            if (reactorParent == null) return;
-            foreach (WzSubProperty reactor in reactorParent.WzProperties)
-            {
-                int x = InfoTool.GetInt(reactor["x"]);
-                int y = InfoTool.GetInt(reactor["y"]);
-                int reactorTime = InfoTool.GetInt(reactor["reactorTime"]);
-                string name = InfoTool.GetOptionalString(reactor["name"]);
-                string id = InfoTool.GetString(reactor["id"]);
-                bool flip = InfoTool.GetBool(reactor["f"]);
-
-                if (id == null)
-                {
-                    int pageIdx = InfoTool.GetInt(reactor["pageIdx"]);
-                    int pieceIdx = InfoTool.GetInt(reactor["pieceIdx"]);
-                    var rObj = mapImage[pageIdx.ToString()]["obj"][pieceIdx.ToString()];
-                    id = InfoTool.GetString(rObj["l2"]);
-                    name = id;
-                    reactorTime = InfoTool.GetInt(rObj["reactorTime"]);
-                    flip = InfoTool.GetBool(rObj["f"]);
-                    x = InfoTool.GetInt(rObj["x"]);
-                    y = InfoTool.GetInt(rObj["y"]);
-                    mapImage.WzFileParent.GetObjectFromPath("Map/Obj/" + rObj["oS"] + ".img/" + rObj["l0"] + "/" + rObj["l1"] + "/" + id);
-                }
-                mapBoard.BoardItems.Reactors.Add((ReactorInstance)Program.InfoManager.Reactors[id].CreateInstance(mapBoard, x, y, reactorTime, name, flip));
-            }
-        }
-
         public static void LoadChairs(WzImage mapImage, Board mapBoard)
         {
             WzSubProperty chairParent = (WzSubProperty)mapImage["seat"];
@@ -1033,7 +1003,6 @@ namespace HaCreator.Wz
                 LoadRopes(mapImage, mapBoard);
                 LoadChairs(mapImage, mapBoard);
                 LoadPortals(mapImage, mapBoard);
-                LoadReactors(mapImage, mapBoard);
                 LoadToolTips(mapImage, mapBoard);
                 LoadBackgrounds(mapImage, mapBoard);
                 LoadMisc(mapImage, mapBoard);
