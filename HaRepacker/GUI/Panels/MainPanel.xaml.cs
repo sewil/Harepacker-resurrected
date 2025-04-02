@@ -1801,10 +1801,11 @@ namespace HaRepacker.GUI.Panels
 
                             if (stringObj.Name == PORTAL_NAME_OBJ_NAME) // Portal type name display - "pn" = portal name 
                             {
-                                PortalType portalType = PortalTypeExtensions.FromCode(obj.ToString());
-                                
-                                toolStripStatusLabel_additionalInfo.Text =
-                                    string.Format(Properties.Resources.MainAdditionalInfo_PortalType, portalType.GetFriendlyName());
+                                if (PortalTypeExtensions.TryFromCode(obj.ToString(), out PortalType portalType))
+                                {
+                                    toolStripStatusLabel_additionalInfo.Text =
+                                        string.Format(Properties.Resources.MainAdditionalInfo_PortalType, portalType.GetFriendlyName());
+                                }
                             }
                             else {
                                 //textPropBox.AcceptsReturn = true;
