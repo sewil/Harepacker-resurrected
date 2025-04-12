@@ -12,9 +12,8 @@ namespace HarepackerCLI
             string gameVersion = args[0];
             string folder = args[1];
             string outPath = args[2];
-            string[] ignoredFolders = args[3].Split(";");
+            string[] packIgnore = File.ReadAllLines(args[3]);
             var mapleVersion = WzMapleVersion.CLASSIC;
-            var allowedExtensions = new[] { ".img", ".img.xml" };
 
             var wzf = new WzFile(mapleVersion, gameVersion);
             wzf.Header.Copyright = "Package file v1.0 Copyright 2002 Wizet, ZMS";
@@ -23,28 +22,26 @@ namespace HarepackerCLI
             wzf.WzDirectory.Name = "Data.wz";
             imgDeserializer = new WzImgDeserializer(true);
             xmlDeserializer = new WzXmlDeserializer(true, wzf.WzIv);
-            ImportFolder(wzf, wzf, folder, allowedExtensions, ignoredFolders);
+            ImportFolder(wzf, wzf, folder, packIgnore);
 
             wzf.SaveToDisk(outPath, null, mapleVersion);
         }
-        static int ImportFolder(WzFile wzFile, WzObject parent, string folder, string[] allowedExtensions, string[] ignoredFolders)
+        static int ImportFolder(WzFile wzFile, WzObject parent, string folder, string[] packIgnore)
         {
             var subfolders = Directory.GetDirectories(folder)
-                .Where(folder => !ignoredFolders.Contains(Path.GetFileName(folder)));
+                .Where(folder => !packIgnore.Contains(Path.GetFileName(folder)));
 
             foreach (var subfolder in subfolders)
             {
                 string dirName = new DirectoryInfo(subfolder).Name;
                 var subparent = new WzDirectory(dirName, wzFile);
                 AddObj(parent, subparent);
-                int importedObjects = ImportFolder(wzFile, subparent, subfolder, allowedExtensions, ignoredFolders);
-                Console.WriteLine($"Imported directory '{dirName}' for folder '{subfolder}' with {importedObjects} objects");
+                int importedObjects = ImportFolder(wzFile, subparent, subfolder, packIgnore);
+                Console.WriteLine($"Imported directory '{dirName}' from '{subfolder}' with {importedObjects} objects");
             }
 
-            var files = Directory
-                .GetFiles(folder)
-                .Where(file => allowedExtensions.Any(file.ToLower().EndsWith))
-                .ToList();
+            var files = Directory.GetFiles(folder)
+                .Where(file => !packIgnore.Contains(Path.GetFileName(file)));
 
             int objects = 0;
 
