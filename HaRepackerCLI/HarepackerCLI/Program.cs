@@ -1,4 +1,6 @@
-﻿using MapleLib.WzLib;
+﻿using HarepackerCLI.Converters;
+using MapleLib;
+using MapleLib.WzLib;
 using MapleLib.WzLib.Serializer;
 
 namespace HarepackerCLI
@@ -9,23 +11,70 @@ namespace HarepackerCLI
         static WzXmlDeserializer xmlDeserializer;
         static void Main(string[] args)
         {
-            string gameVersion = args[0];
-            string folder = args[1];
-            string outPath = args[2];
-            string[] packIgnore = File.ReadAllLines(args[3]);
-            var mapleVersion = WzMapleVersion.CLASSIC;
+            if (args.Length == 0 || (args[0] != "import" && args[0] != "convert"))
+            {
+                Console.WriteLine("Usage: HarepackerCLI.exe <import|convert> [options]");
+                Environment.Exit(1);
+            }
+            else if (args[0] == "import")
+            {
+                if (args.Length < 5)
+                {
+                    Console.WriteLine("Usage: HarepackerCLI.exe import <game-version> <input directory> <output file> <packignore.txt>");
+                    Environment.Exit(1);
+                }
+                else
+                {
+                    string gameVersion = args[1];
+                    string folder = args[2];
+                    string outPath = args[3];
+                    string[] packIgnore = File.ReadAllLines(args[4]);
+                    var mapleVersion = WzMapleVersion.CLASSIC;
 
-            var wzf = new WzFile(mapleVersion, gameVersion);
-            wzf.Header.Copyright = "Package file v1.0 Copyright 2002 Wizet, ZMS";
-            wzf.Header.RecalculateFileStart();
-            wzf.Name = "Data.wz";
-            wzf.WzDirectory.Name = "Data.wz";
-            imgDeserializer = new WzImgDeserializer(true);
-            xmlDeserializer = new WzXmlDeserializer(true, wzf.WzIv);
-            ImportFolder(wzf, wzf, folder, packIgnore);
+                    var wzf = new WzFile(mapleVersion, gameVersion);
+                    wzf.Header.Copyright = "Package file v1.0 Copyright 2002 Wizet, ZMS";
+                    wzf.Header.RecalculateFileStart();
+                    wzf.Name = "Data.wz";
+                    wzf.WzDirectory.Name = "Data.wz";
+                    imgDeserializer = new WzImgDeserializer(true);
+                    xmlDeserializer = new WzXmlDeserializer(true, wzf.WzIv);
+                    ImportFolder(wzf, wzf, folder, packIgnore);
 
-            wzf.SaveToDisk(outPath, null, mapleVersion);
+                    wzf.SaveToDisk(outPath, null, mapleVersion);
+                }
+            }
+            else if (args[0] == "convert")
+            {
+                if (args.Length < 4)
+                {
+                    Console.WriteLine(args.Length);
+                    Console.WriteLine("Usage: HarepackerCLI.exe convert <map|quest|npc|reactor|mob> <data-directory> <game-version> [options]");
+                    Environment.Exit(1);
+                }
+                switch (args[1])
+                {
+                    case "map":
+                        MapConverter.Convert(args);
+                        break;
+                    case "quest":
+                        QuestConverter.Convert(args);
+                        break;
+                    case "npc":
+                        NpcConverter.Convert(args);
+                        break;
+                    case "mob":
+                        MobConverter.Convert(args);
+                        break;
+                    case "reactor":
+                        ReactorConverter.Convert(args);
+                        break;
+                    default:
+                        Console.WriteLine("Unknown convert option \"" + args[1] + "\". Please use one of: map, quest, npc, reactor, mob.");
+                        break;
+                }
+            }
         }
+
         static int ImportFolder(WzFile wzFile, WzObject parent, string folder, string[] packIgnore)
         {
             var subfolders = Directory.GetDirectories(folder)
@@ -47,46 +96,20 @@ namespace HarepackerCLI
 
             foreach (string file in files)
             {
-                List<WzObject> objs;
                 try
                 {
-                    if (file.ToLower().EndsWith(".img.xml"))
+                    List<WzObject> objs = ParseFile(file, wzFile);
+                    if (objs == null) continue;
+                    foreach (WzObject obj in objs)
                     {
-                        objs = xmlDeserializer.ParseXML(file);
-                    }
-                    else if (file.ToLower().EndsWith(".img"))
-                    {
-                        objs = new List<WzObject>
-                        {
-                            imgDeserializer.WzImageFromIMGFile(file, wzFile.WzIv, Path.GetFileName(file), out bool successfullyParsedImage)
-                        };
-
-                        if (!successfullyParsedImage)
-                        {
-                            Console.WriteLine(string.Format("Error importing {0} file. Are you sure you have selected the correct WZ encryption?", file));
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Unrecognized file \"{file}\", skipping...");
-                        continue;
+                        AddObj(parent, obj);
+                        //Console.WriteLine($"Added object {obj.Name} for file '{file}'");
+                        objects++;
                     }
                 }
                 catch (ThreadAbortException)
                 {
                     return 0;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(string.Format("The file \"{0}\" is invalid and will be skipped. Error: {1}", file, e.Message));
-                    continue;
-                }
-                foreach (WzObject obj in objs)
-                {
-                    AddObj(parent, obj);
-                    //Console.WriteLine($"Added object {obj.Name} for file '{file}'");
-                    objects++;
                 }
             }
             return objects;
@@ -164,6 +187,48 @@ namespace HarepackerCLI
                 return false;
 
             return true;
+        }
+
+        static List<WzObject> ParseFile(string file, WzFile wzFile)
+        {
+            try
+            {
+                if (file.ToLower().EndsWith(".img.xml"))
+                {
+                    return xmlDeserializer.ParseXML(file);
+                }
+                else if (file.ToLower().EndsWith(".img"))
+                {
+                    var objs = new List<WzObject>
+                        {
+                            imgDeserializer.WzImageFromIMGFile(file, wzFile.WzIv, Path.GetFileName(file), out bool successfullyParsedImage)
+                        };
+
+                    if (!successfullyParsedImage)
+                    {
+                        Console.WriteLine(string.Format("Error importing {0} file. Are you sure you have selected the correct WZ encryption?", file));
+                        return null;
+                    }
+                    else
+                    {
+                        return objs;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Unrecognized file \"{file}\", skipping...");
+                    return null;
+                }
+            }
+            catch (ThreadAbortException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(string.Format("The file \"{0}\" is invalid and will be skipped. Error: {1}", file, e.Message));
+                return null;
+            }
         }
     }
 }
